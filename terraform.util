@@ -1,0 +1,9 @@
+bin=terraform
+ver=0.11.3
+url=https://releases.hashicorp.com/terraform/${ver}/terraform_${ver}_linux_amd64.zip
+sum=6b8a7b83954597d36bbed23913dd51bc253906c612a070a21db373eab71b277b
+
+unpack() {
+  unzip -qq "$ARCHIVE"
+  mv $bin "$STAGED"
+}

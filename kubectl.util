@@ -1,0 +1,4 @@
+bin=kubectl
+ver=1.8.1
+url=https://storage.googleapis.com/kubernetes-release/release/v$ver/bin/linux/amd64/$bin
+sum=e5a57db78e558f10fd26254362d68523670d1f9ed85cd14d9199295617d6afad

@@ -1,0 +1,9 @@
+bin=helm
+ver=2.6.2
+url=https://kubernetes-helm.storage.googleapis.com/helm-v$ver-linux-amd64.tar.gz
+sum=ba807d6017b612a0c63c093a954c7d63918d3e324bdba335d67b7948439dbca8
+
+unpack() {
+  tar xzf "$ARCHIVE"
+  mv linux-amd64/helm "$STAGED"
+}

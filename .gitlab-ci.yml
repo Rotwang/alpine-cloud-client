@@ -1,0 +1,22 @@
+image: alpine:3.6
+
+variables:
+  IMG: random-registry/devtools/alpine-cloud-client
+
+before_script:
+- mkdir -p ~/.docker; echo $DOCKER_AUTH_CONFIG > ~/.docker/config.json
+- chmod -R o-rwx,g-rwx ~/.docker
+   
+after_script:
+- rm -rf ~/.docker
+
+
+build:
+  stage: build
+  tags:
+  - docker
+  script:
+  - docker build -t $IMG:$CI_PIPELINE_ID .
+  - docker tag $IMG:$CI_PIPELINE_ID $IMG:latest
+  - docker push $IMG:$CI_PIPELINE_ID
+  - docker push $IMG:latest

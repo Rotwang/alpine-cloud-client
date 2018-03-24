@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+compare_sums() {
+  local file_under_test="$1"
+  local orig_sum="$2"
+
+  local new_sum="$(sha256sum "$file_under_test")"
+  new_sum="${new_sum%% *}"
+
+  if [[ "$new_sum" != "$orig_sum" ]]; then
+    echo "Fetched package sha256 sum mismatch!" >&2
+    return 2
+  fi
+}
+
+. "$1" || { echo "Couldn't source '$1'" >&2; exit 2; }
+
+dest="/usr/bin/$bin"
+
+tmpdir="$(mktemp -d)"
+trap "rm -rf $tmpdir" EXIT
+cd "$tmpdir"
+
+exec {fh}<>"$(mktemp)"
+rm -f "$(readlink -f /proc/self/fd/$fh)"
+ARCHIVE="/dev/fd/$fh"
+
+(
+  set -x
+  curl -#LS "$url"
+) > "$ARCHIVE"
+
+compare_sums "$ARCHIVE" "$sum" || exit 2
+
+if declare -f unpack >/dev/null; then
+  STAGED="$tmpdir/$bin"
+  unpack
+  mv "$STAGED" "$dest"
+else
+  cp "$ARCHIVE" "$dest"
+fi
+chmod +x "$dest"
